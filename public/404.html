@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Yönlendiriliyor...</title>
+  <script>
+    // GitHub Pages SPA fallback — 404 sayfasından ana sayfaya yönlendir
+    // query string ile path'i encode ederek ilet
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + 
+      l.pathname.split('/').slice(0, 1).join('/') + 
+      '/?p=' + encodeURIComponent(l.pathname + l.search) + l.hash
+    );
+  </script>
+</head>
+<body>
+  <style>
+    body { background: #050a0e; color: #00f2fe; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+    p { text-align: center; }
+  </style>
+  <p>SİSTEM YÖNLENDİRİLİYOR...<br><small style="color:#666">Redirecting...</small></p>
+</body>
+</html>
