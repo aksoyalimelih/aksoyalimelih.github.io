@@ -80,7 +80,11 @@ function App() {
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const response = await fetch('/api/portfolio');
+        // GitHub Pages / static hosting: API yoktur, data.json'ı doğrudan oku
+        const isStaticDeploy = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        const url = isStaticDeploy ? '/data.json' : '/api/portfolio';
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Veriler yüklenirken bir sorun oluştu.');
         }
