@@ -1,0 +1,143 @@
+{
+  "about": {
+    "name": "Ali Melih Aksoy",
+    "title": "Jr. Full-Stack Developer & Jr. Data Scientist / Jr. Data Analyst",
+    "summary": "Atatürk Üniversitesi Yönetim Bilişim Sistemleri (YBS) bölümünden mezun olmuş, full-stack geliştirme ve veri bilimi odaklı yazılım çözümlerine hakim bilişim uzmanı. PHP, Python ve React teknolojilerini kullanarak yapay zeka entegrasyonlu projeler geliştirme, makine öğrenimi modelleri kurgulama ve veri analitiği alanlarında teknik yetkinliğe sahip, react + PHP ile 3 canlı proje teslim ettim. OpenCV entegrasyonlu yüz tanıma sistemi geliştirdim. Hem frontend'i hem ML pipeline'ı aynı anda kurabilen geliştiriciyim.",
+    "email": "aksoyalimelih@gmail.com",
+    "github": "github.com/aksoyalimelih",
+    "linkedin": "linkedin.com/in/ali-melih-aksoy-94522a26b/",
+    "location": "Gaziantep, Türkiye"
+  },
+  "skills": {
+    "languages": [
+      "PHP",
+      "Python",
+      "JavaScript (ES6+)",
+      "SQL",
+      "Node.js"
+    ],
+    "frameworks": [
+      "React",
+      "Vue.js",
+      "Sklearn (Makine Öğrenimi)",
+      "OpenCV",
+      "Express.js"
+    ],
+    "databases": [],
+    "tools": [
+      "Git/GitHub",
+      "Cursor AI",
+      "Agile/Scrum",
+      "BT Teknik Destek & Donanım Bakımı"
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "Esnafhanem",
+      "description": "Yerel esnafların dijitalleşme süreçlerini yöneten full-stack platform. Mimari tasarım, veritabanı optimizasyonu ve dağıtım (deployment) süreçleri yönetildi.",
+      "technologies": [
+        "React",
+        "PHP",
+        "MySQL",
+        "JavaScript (ES6+)",
+        "Git"
+      ],
+      "category": "Web",
+      "githubUrl": "https://github.com/aksoyalimelih",
+      "liveUrl": "",
+      "image": "/esnafhanem.png"
+    },
+    {
+      "id": "proj-2",
+      "title": "StajGo",
+      "description": "Üniversite öğrencilerinin staj süreçlerini kolaylaştıran, bulut mimarisi entegreli modern staj platformu projesi.",
+      "technologies": [
+        "React",
+        "Node.js",
+        "Firebase SDK",
+        "Express.js"
+      ],
+      "category": "Web",
+      "githubUrl": "https://github.com/aksoyalimelih",
+      "liveUrl": "",
+      "image": "/stajgo.png"
+    },
+    {
+      "id": "proj-3",
+      "title": "TetaCodeProject",
+      "description": "Üretken yapay zekâ ile metin özetleme, asenkron veri işleme ve akıllı sesli not alma özelliklerine sahip üretkenlik sistemi.",
+      "technologies": [
+        "Python",
+        "Gemini API (Generative AI)",
+        "Prompt Engineering"
+      ],
+      "category": "AI",
+      "githubUrl": "https://github.com/aksoyalimelih",
+      "liveUrl": "",
+      "image": "/tetacode.png"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "cert-1",
+      "title": "Siber Güvenlik Uzmanlık Sertifikası",
+      "issuer": "Huawei & CloudMetrik",
+      "year": "2026"
+    },
+    {
+      "id": "cert-2",
+      "title": "Generative AI & Prompt Engineer",
+      "issuer": "Miuul",
+      "year": "2025"
+    },
+    {
+      "id": "cert-3",
+      "title": "Machine Learning",
+      "issuer": "Miuul",
+      "year": "2024"
+    },
+    {
+      "id": "cert-4",
+      "title": "Feature Engineering",
+      "issuer": "Miuul",
+      "year": "2024"
+    },
+    {
+      "id": "cert-5",
+      "title": "Python Programming for Data Science",
+      "issuer": "Miuul",
+      "year": "2024"
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp-1",
+      "company": "2MEDYA BİLİŞİM",
+      "role": "Full Stack Developer",
+      "years": "2024 - 2025",
+      "description": "Müşteri gereksinimlerine göre ölçeklenebilir web uygulamalarının tasarlanması ve yayına alınması süreçleri yönetildi. React ve PHP mimarileri kullanılarak kullanıcı deneyimi odaklı, yüksek performanslı backend ve frontend entegrasyonları sağlandı."
+    },
+    {
+      "id": "exp-2",
+      "company": "MIS-SOFT DİJİTAL DÖNÜŞÜM",
+      "role": "Yazılım Geliştirici - Stajyer",
+      "years": "2024",
+      "description": "Sklearn kütüphanesi kullanılarak pazar analizine yönelik fiyat tahmin algoritmaları geliştirildi. Model doğruluğu oranı %93 seviyesine ulaştı. OpenCV ve makine öğrenimi modelleri entegre edilerek, yüz tanıma tabanlı güvenlik sistemi prototipi oluşturuldu."
+    },
+    {
+      "id": "exp-3",
+      "company": "ATATÜRK ÜNİVERSİTESİ İKTİSADİ VE İDARİ BİLİMLER FAKÜLTESİ",
+      "role": "IT Intern",
+      "years": "2023 - 2024",
+      "description": "Fakülte bünyesindeki 100+ iş istasyonunun donanım arızaları giderildi; sistem güncellemeleri zamanında tamamlandı. Kurumsal BT altyapısının sürekliliği için periyodik donanım, yazılım ve ağ denetimleri yürütüldü."
+    }
+  ],
+  "education": {
+    "school": "Atatürk Üniversitesi",
+    "department": "Yönetim Bilişim Sistemleri",
+    "years": "2022 - 2026",
+    "gpa": "3.19/4.00"
+  },
+  "adminPassword": "$2b$10$SZukK6HrRpQmLAZrEsEwL.ybouVnjKz4QE362r1RitM/CrkNwc9p6"
+}
