@@ -1,20 +1,26 @@
 import React from 'react';
 import { translations, translateText } from '../utils/i18n';
+import { useScrollReveal } from '../utils/useScrollReveal';
 
-const About = ({ about, skills, certificates, education, lang }) => {
+const About = ({ about, skills, education, lang }) => {
   const t = lang === 'tr' ? translations.tr : translations.en;
+  
+  // Section Header ve iki ana kart için scroll reveal
+  const [headerRef, isHeaderVisible] = useScrollReveal();
+  const [bioRef, isBioVisible] = useScrollReveal();
+  const [skillsRef, isSkillsVisible] = useScrollReveal();
 
   return (
     <section id="about" className="about-section">
       <div className="container">
-        <div className="section-header">
+        <div ref={headerRef} className={`section-header reveal-block ${isHeaderVisible ? 'revealed' : ''}`}>
           <h2 className="section-title font-orbitron text-gradient glitch-hover" data-text={t.about}>{t.about}</h2>
           <p className="section-subtitle">{t.aboutSubtitle}</p>
         </div>
 
         <div className="about-grid">
-          {/* Main Info */}
-          <div className="about-bio glass-card">
+          {/* Main Info - Left Card (reveals from left) */}
+          <div ref={bioRef} className={`about-bio glass-card reveal-left ${isBioVisible ? 'revealed' : ''}`}>
             <h3 className="card-title font-orbitron">{t.summaryTitle}</h3>
             <p className="bio-text">{translateText(about?.summary, lang)}</p>
 
@@ -48,8 +54,8 @@ const About = ({ about, skills, certificates, education, lang }) => {
             </div>
           </div>
 
-          {/* Technical Skills */}
-          <div className="about-skills glass-card">
+          {/* Technical Skills - Right Card (reveals from right) */}
+          <div ref={skillsRef} className={`about-skills glass-card reveal-right ${isSkillsVisible ? 'revealed' : ''}`}>
             <h3 className="card-title font-orbitron">{t.skillsTitle}</h3>
             
             <div className="skills-categories">

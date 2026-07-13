@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { translations } from '../utils/i18n';
+import { useScrollReveal } from '../utils/useScrollReveal';
 
 const Contact = ({ about, addToast, lang }) => {
   const t = lang === 'tr' ? translations.tr : translations.en;
+
+  const [headerRef, isHeaderVisible] = useScrollReveal();
+  const [formRef, isFormVisible] = useScrollReveal();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,7 +30,6 @@ const Contact = ({ about, addToast, lang }) => {
 
     setIsSubmitting(true);
     
-    // Automatically detect static hosting environment (like github.io)
     const isStaticDeploy = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     const submitUrl = isStaticDeploy 
       ? 'https://formsubmit.co/ajax/aksoyalimelih@gmail.com' 
@@ -58,28 +61,27 @@ const Contact = ({ about, addToast, lang }) => {
       const isSuccess = response.ok && (
         isStaticDeploy 
           ? (data.success === 'true' || data.success === true)
-          : true
+          : response.status === 200
       );
 
-      if (isSuccess) {
-        addToast(
-          isStaticDeploy && data.message && (data.message.includes('Activation') || data.message.includes('needs Activation'))
-            ? (lang === 'tr' ? 'İlk gönderim için e-postanıza bir aktivasyon bağlantısı gönderildi! Lütfen gelen kutunuzu kontrol edin.' : 'Activation email sent! Please check your inbox.')
-            : (lang === 'tr' ? 'Mesajınız başarıyla iletildi!' : 'Your message has been sent!'), 
-          'success'
-        );
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
-      } else {
-        addToast(data.message || (lang === 'tr' ? 'Mesaj gönderilemedi.' : 'Failed to send message.'), 'error');
+      if (!isSuccess) {
+        throw new Error(lang === 'tr' ? 'E-posta servisi yanıt vermedi.' : 'Email service did not respond.');
       }
-    } catch (error) {
-      console.error(error);
-      addToast(lang === 'tr' ? 'Mesaj iletilirken bağlantı hatası oluştu.' : 'Connection error occurred while sending message.', 'error');
+
+      addToast(
+        lang === 'tr' 
+          ? 'Mesajınız başarıyla iletildi!' 
+          : 'Your message has been sent successfully!', 
+        'success'
+      );
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      addToast(
+        lang === 'tr' 
+          ? 'Mesaj gönderilirken hata oluştu. Lütfen tekrar deneyin.' 
+          : 'Error sending message. Please try again.', 
+        'error'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -88,61 +90,50 @@ const Contact = ({ about, addToast, lang }) => {
   return (
     <section id="contact" className="contact-section">
       <div className="container">
-        <div className="section-header">
+        <div ref={headerRef} className={`section-header reveal-block ${isHeaderVisible ? 'revealed' : ''}`}>
           <h2 className="section-title font-orbitron text-gradient glitch-hover" data-text={t.contactTitle}>{t.contactTitle}</h2>
           <p className="section-subtitle">{t.contactSubtitle}</p>
         </div>
 
         <div className="contact-grid">
-          {/* Contact Information */}
-          <div className="contact-info-cards">
+          {/* Contact Details / Info Cards */}
+          <div className="contact-info">
             {about?.email && (
-              <a href={`mailto:${about.email}`} className="contact-info-card glass-card">
-                <div className="contact-card-icon font-orbitron">@</div>
-                <div className="contact-card-details">
-                  <span className="contact-card-title">{lang === 'tr' ? 'E-posta' : 'Email'}</span>
-                  <span className="contact-card-value">{about.email}</span>
-                </div>
-              </a>
+              <ContactInfoCard 
+                href={`mailto:${about.email}`}
+                label={lang === 'tr' ? 'E-Posta' : 'Email'}
+                value={about.email}
+                icon="✉"
+                index={0}
+              />
             )}
 
             {about?.linkedin && (
-              <a 
-                href={`https://${about.linkedin}`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="contact-info-card glass-card"
-              >
-                <div className="contact-card-icon font-orbitron">in</div>
-                <div className="contact-card-details">
-                  <span className="contact-card-title">LinkedIn</span>
-                  <span className="contact-card-value">
-                    {about.linkedin.replace('linkedin.com/in/', '/in/').replace(/\/$/, '')}
-                  </span>
-                </div>
-              </a>
+              <ContactInfoCard 
+                href={`https://${about.linkedin}`}
+                label="LinkedIn"
+                value={about.linkedin.replace('linkedin.com/in/', '/in/').replace(/\/$/, '')}
+                icon="in"
+                index={1}
+              />
             )}
 
             {about?.github && (
-              <a 
-                href={`https://${about.github}`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="contact-info-card glass-card"
-              >
-                <div className="contact-card-icon font-orbitron">git</div>
-                <div className="contact-card-details">
-                  <span className="contact-card-title">GitHub</span>
-                  <span className="contact-card-value">
-                    {'@' + about.github.replace('github.com/', '').replace(/\/$/, '')}
-                  </span>
-                </div>
-              </a>
+              <ContactInfoCard 
+                href={`https://${about.github}`}
+                label="GitHub"
+                value={'@' + about.github.replace('github.com/', '').replace(/\/$/, '')}
+                icon="git"
+                index={2}
+              />
             )}
           </div>
 
           {/* Contact Form */}
-          <div className="contact-form-container glass-card">
+          <div 
+            ref={formRef} 
+            className={`contact-form-container glass-card reveal-right ${isFormVisible ? 'revealed' : ''}`}
+          >
             <h3 className="card-title font-orbitron mb-4">{t.sendMsg}</h3>
             <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-group">
@@ -211,6 +202,26 @@ const Contact = ({ about, addToast, lang }) => {
         </div>
       </div>
     </section>
+  );
+};
+
+const ContactInfoCard = ({ href, label, value, icon, index }) => {
+  const [ref, isVisible] = useScrollReveal({ threshold: 0.1 });
+  return (
+    <a 
+      ref={ref}
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className={`contact-info-card glass-card reveal-left ${isVisible ? 'revealed' : ''}`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      <div className="contact-card-icon font-orbitron">{icon}</div>
+      <div className="contact-card-details">
+        <span className="contact-card-title">{label}</span>
+        <span className="contact-card-value">{value}</span>
+      </div>
+    </a>
   );
 };
 

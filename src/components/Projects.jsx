@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import sfx from '../utils/sfx';
 import { translations, translateText } from '../utils/i18n';
+import { useScrollReveal } from '../utils/useScrollReveal';
 
 const Projects = ({ projects, lang }) => {
   const t = lang === 'tr' ? translations.tr : translations.en;
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
+
+  // Section Header ve GitHub CTA için scroll reveal
+  const [headerRef, isHeaderVisible] = useScrollReveal();
+  const [ctaRef, isCtaVisible] = useScrollReveal({ threshold: 0.05 });
 
   // Normalize categories for filtering
   const categories = ['All', 'Web', 'AI'];
@@ -34,7 +39,7 @@ const Projects = ({ projects, lang }) => {
   return (
     <section id="projects" className="projects-section">
       <div className="container">
-        <div className="section-header">
+        <div ref={headerRef} className={`section-header reveal-block ${isHeaderVisible ? 'revealed' : ''}`}>
           <h2 className="section-title font-orbitron text-gradient glitch-hover" data-text={t.projectsTitle}>{t.projectsTitle}</h2>
           <p className="section-subtitle">{t.projectsSubtitle}</p>
         </div>
@@ -56,59 +61,22 @@ const Projects = ({ projects, lang }) => {
         {/* Projects Grid */}
         <div className="projects-grid">
           {filteredProjects && filteredProjects.map((project, index) => (
-            <div 
+            <ProjectCard 
               key={project.id || index} 
-              className="project-card glass-card"
-              onClick={() => { sfx.playClick(); setSelectedProject(project); }}
-            >
-              <div className="project-image-fallback">
-                {project.image ? (
-                  isVideo(project.image) ? (
-                    <video 
-                      src={project.image} 
-                      muted 
-                      loop 
-                      autoPlay 
-                      playsInline 
-                      className="project-video-element"
-                    />
-                  ) : (
-                    <div 
-                      className="project-img-inner" 
-                      style={{ background: `url(${project.image}) center/cover` }} 
-                    />
-                  )
-                ) : (
-                  <div 
-                    className="project-img-inner" 
-                    style={{ background: getGradient(index) }} 
-                  />
-                )}
-                <span className="project-category-badge font-mono">{project.category}</span>
-                <div className="project-image-overlay">
-                  <span className="view-details-text font-orbitron">{t.viewDetails}</span>
-                </div>
-              </div>
-              
-              <div className="project-info">
-                <h3 className="project-title font-orbitron">{translateText(project.title, lang)}</h3>
-                <p className="project-desc">{translateText(project.description, lang)}</p>
-                <div className="project-tech-list">
-                  {project.technologies && project.technologies.slice(0, 3).map((tech, idx) => (
-                    <span key={idx} className="tech-badge">{tech}</span>
-                  ))}
-                  {project.technologies && project.technologies.length > 3 && (
-                    <span className="tech-badge">+{project.technologies.length - 3}</span>
-                  )}
-                </div>
-              </div>
-            </div>
+              project={project} 
+              index={index} 
+              lang={lang} 
+              t={t} 
+              isVideo={isVideo} 
+              getGradient={getGradient}
+              setSelectedProject={setSelectedProject}
+            />
           ))}
         </div>
       </div>
 
       {/* GitHub CTA - More Projects Button */}
-      <div className="projects-github-cta">
+      <div ref={ctaRef} className={`projects-github-cta reveal-scale ${isCtaVisible ? 'revealed' : ''}`}>
         <a
           href="https://github.com/aksoyalimelih"
           target="_blank"
@@ -139,67 +107,73 @@ const Projects = ({ projects, lang }) => {
         title={selectedProject ? translateText(selectedProject.title, lang) : ''}
       >
         {selectedProject && (
-          <div className="project-details">
-            <div className="project-details-image">
+          <div className="project-detail-modal-content">
+            <div className="modal-image-container">
               {selectedProject.image ? (
                 isVideo(selectedProject.image) ? (
                   <video 
                     src={selectedProject.image} 
-                    controls 
-                    autoPlay 
+                    muted 
                     loop 
-                    playsInline
-                    className="project-video-element"
+                    autoPlay 
+                    playsInline 
+                    className="modal-media-element"
                   />
                 ) : (
-                  <div 
-                    className="project-img-inner" 
-                    style={{ background: `url(${selectedProject.image}) center/cover` }} 
+                  <img 
+                    src={selectedProject.image} 
+                    alt={translateText(selectedProject.title, lang)} 
+                    className="modal-media-element"
                   />
                 )
               ) : (
                 <div 
-                  className="project-img-inner" 
-                  style={{ background: getGradient(projects.indexOf(selectedProject)) }} 
+                  className="modal-media-fallback" 
+                  style={{ background: getGradient(0) }} 
                 />
               )}
-              <span className="project-details-category font-mono">{selectedProject.category}</span>
             </div>
-            
-            <div className="project-details-content">
-              <h4 className="project-details-subtitle font-orbitron">
-                {lang === 'tr' ? 'Proje Hakkında' : 'About the Project'}
-              </h4>
-              <p className="project-details-desc">{translateText(selectedProject.description, lang)}</p>
-              
-              <h4 className="project-details-subtitle font-orbitron">
-                {lang === 'tr' ? 'Kullanılan Teknolojiler' : 'Technologies Used'}
-              </h4>
-              <div className="project-details-tech">
-                {selectedProject.technologies && selectedProject.technologies.map((tech, idx) => (
-                  <span key={idx} className="tech-badge">{tech}</span>
-                ))}
+
+            <div className="modal-body-info mt-6">
+              <h3 className="modal-project-title font-orbitron text-gradient-purple mb-4">
+                {translateText(selectedProject.title, lang)}
+              </h3>
+              <p className="modal-project-desc mb-6 leading-relaxed">
+                {translateText(selectedProject.description, lang)}
+              </p>
+
+              <div className="tech-section mb-6">
+                <h4 className="font-mono text-xs text-muted uppercase tracking-wider mb-2">
+                  {lang === 'tr' ? 'Kullanılan Teknolojiler' : 'Technologies Used'}
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProject.technologies && selectedProject.technologies.map((tech, idx) => (
+                    <span key={idx} className="tech-badge">{tech}</span>
+                  ))}
+                </div>
               </div>
 
-              <div className="project-details-actions">
+              <div className="modal-project-links flex gap-4">
                 {selectedProject.githubUrl && (
                   <a 
                     href={selectedProject.githubUrl} 
                     target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-secondary"
+                    rel="noopener noreferrer" 
+                    className="btn btn-primary flex-1 text-center font-mono text-xs uppercase"
+                    onMouseEnter={() => sfx.playTick()}
                   >
-                    {t.githubLink}
+                    {lang === 'tr' ? 'Kodu İncele' : 'Source Code'}
                   </a>
                 )}
                 {selectedProject.liveUrl && (
                   <a 
                     href={selectedProject.liveUrl} 
                     target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-primary animate-pulse"
+                    rel="noopener noreferrer" 
+                    className="btn btn-danger flex-1 text-center font-mono text-xs uppercase"
+                    onMouseEnter={() => sfx.playTick()}
                   >
-                    {t.liveLink}
+                    {lang === 'tr' ? 'Canlı Demo' : 'Live Demo'}
                   </a>
                 )}
               </div>
@@ -208,6 +182,62 @@ const Projects = ({ projects, lang }) => {
         )}
       </Modal>
     </section>
+  );
+};
+
+const ProjectCard = ({ project, index, lang, t, isVideo, getGradient, setSelectedProject }) => {
+  // Her proje kartı için bağımsız scroll reveal
+  const [ref, isVisible] = useScrollReveal({ threshold: 0.1 });
+
+  return (
+    <div 
+      ref={ref}
+      className={`project-card glass-card reveal-block ${isVisible ? 'revealed' : ''}`}
+      style={{ transitionDelay: `${(index % 3) * 100}ms` }}
+      onClick={() => { sfx.playClick(); setSelectedProject(project); }}
+    >
+      <div className="project-image-fallback">
+        {project.image ? (
+          isVideo(project.image) ? (
+            <video 
+              src={project.image} 
+              muted 
+              loop 
+              autoPlay 
+              playsInline 
+              className="project-video-element"
+            />
+          ) : (
+            <div 
+              className="project-img-inner" 
+              style={{ background: `url(${project.image}) center/cover` }} 
+            />
+          )
+        ) : (
+          <div 
+            className="project-img-inner" 
+            style={{ background: getGradient(index) }} 
+          />
+        )}
+        <span className="project-category-badge font-mono">{project.category}</span>
+        <div className="project-image-overlay">
+          <span className="view-details-text font-orbitron">{t.viewDetails}</span>
+        </div>
+      </div>
+      
+      <div className="project-info">
+        <h3 className="project-title font-orbitron">{translateText(project.title, lang)}</h3>
+        <p className="project-desc">{translateText(project.description, lang)}</p>
+        <div className="project-tech-list">
+          {project.technologies && project.technologies.slice(0, 3).map((tech, idx) => (
+            <span key={idx} className="tech-badge">{tech}</span>
+          ))}
+          {project.technologies && project.technologies.length > 3 && (
+            <span className="tech-badge">+{project.technologies.length - 3}</span>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
