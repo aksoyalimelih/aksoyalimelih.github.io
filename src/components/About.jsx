@@ -99,23 +99,6 @@ const About = ({ about, skills, certificates, education, lang }) => {
             </div>
           </div>
         </div>
-
-        {/* Certificates Section */}
-        <div id="certificates" className="certificates-container">
-          <h3 className="section-title-small font-orbitron text-center mb-6">{t.certificates}</h3>
-          <div className="certificates-grid">
-            {certificates && certificates.map((cert) => (
-              <div key={cert.id} className="cert-card glass-card">
-                <div className="cert-icon">🏆</div>
-                <div className="cert-info">
-                  <h4 className="cert-title">{translateText(cert.title, lang)}</h4>
-                  <p className="cert-issuer">{translateText(cert.issuer, lang)}</p>
-                </div>
-                <div className="cert-year font-mono">{cert.year}</div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

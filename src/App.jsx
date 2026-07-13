@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
+import Certificates from './components/Certificates';
 import Contact from './components/Contact';
 import AdminLogin from './components/AdminLogin';
 import AdminPanel from './components/AdminPanel';
@@ -79,20 +80,32 @@ function App() {
   // Fetch portfolio data on mount
   useEffect(() => {
     const fetchPortfolio = async () => {
-      try {
-        // GitHub Pages / static hosting: API yoktur, data.json'ı doğrudan oku
-        const isStaticDeploy = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-        const url = isStaticDeploy ? '/data.json' : '/api/portfolio';
+      // Önce /data.json'ı dene (hem static hem localhost'ta çalışır)
+      // Localhost'ta /api/portfolio varsa onu tercih et (admin güncellemeleri için)
+      const isStaticDeploy = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Veriler yüklenirken bir sorun oluştu.');
+      const tryFetch = async (url) => {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`${url} → ${r.status}`);
+        return r.json();
+      };
+
+      try {
+        let data;
+        if (isStaticDeploy) {
+          data = await tryFetch('/data.json');
+        } else {
+          // Localhost: önce API'yi dene, olmazsa data.json'ı oku
+          try {
+            data = await tryFetch('/api/portfolio');
+          } catch {
+            data = await tryFetch('/data.json');
+          }
         }
-        const data = await response.json();
         setPortfolioData(data);
       } catch (err) {
-        setError(err.message);
-        addToast(err.message, 'error');
+        setError('Veriler yüklenirken bir sorun oluştu.');
+        addToast('Veri yükleme hatası.', 'error');
       } finally {
         setLoading(false);
       }
@@ -255,7 +268,6 @@ function App() {
             <About 
               about={portfolioData?.about} 
               skills={portfolioData?.skills} 
-              certificates={portfolioData?.certificates}
               education={portfolioData?.education}
               lang={lang}
             />
@@ -263,6 +275,8 @@ function App() {
             <Experience experience={portfolioData?.experience} lang={lang} />
             
             <Projects projects={portfolioData?.projects} lang={lang} />
+
+            <Certificates certificates={portfolioData?.certificates} lang={lang} />
             
             <Contact about={portfolioData?.about} addToast={addToast} lang={lang} />
           </main>

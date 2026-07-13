@@ -2616,3 +2616,83 @@ section {
 .github-cta-particles span:nth-child(4) { --tx:  15px; --ty:  18px; }
 .github-cta-particles span:nth-child(5) { --tx:   0px; --ty: -22px; }
 
+/* ============================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================ */
+
+/* Base hidden state */
+.reveal-block {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Triggered when element enters viewport */
+.reveal-block.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide from right */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale in */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Reduce animation for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-block, .reveal-left, .reveal-right, .reveal-scale {
+    transition: opacity 0.3s ease;
+    transform: none;
+  }
+}
+
+/* ============================================
+   CERTIFICATES SECTION (standalone)
+   ============================================ */
+.certificates-section {
+  padding: var(--section-padding, 5rem 0);
+  position: relative;
+}
+
+.certificates-section .section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.certificates-section .section-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
